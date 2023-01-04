@@ -1,0 +1,9 @@
+{
+    "orderFeeDelivery": "Payment made by {fee}",
+    "@orderFeeDelivery": {
+        "placeholders": {
+            "fee": {"description": "Payment info"}
+          }
+    },
+    "language": "English"
+}
