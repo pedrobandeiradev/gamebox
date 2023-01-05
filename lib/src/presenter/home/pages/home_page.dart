@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gamebox/main.dart';
 import 'package:gamebox/src/infra/assets_paths.dart';
-import 'package:gamebox/src/usecases/games_list/game_item.dart';
+import 'package:gamebox/src/usecases/games_list/entity/game_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
