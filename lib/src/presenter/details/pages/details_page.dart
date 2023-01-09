@@ -14,6 +14,21 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+          enableFeedback: false,
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.transparent,
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -155,13 +170,10 @@ class _GameThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 32.0),
-      child: CachedNetworkImage(
-        imageUrl: 'https://www.freetogame.com/g/452/thumbnail.jpg',
-        placeholder: (context, url) => Image.asset(
-          Assets.defaultImage,
-        ),
+    return CachedNetworkImage(
+      imageUrl: 'https://www.freetogame.com/g/452/thumbnail.jpg',
+      placeholder: (context, url) => Image.asset(
+        Assets.defaultImage,
       ),
     );
   }
@@ -208,25 +220,3 @@ class _GallerySection extends StatelessWidget {
     );
   }
 }
-
-
-            //  Padding(
-            //     padding: const EdgeInsets.only(left: 8.0, right: 2.0),
-            //     child: Container(
-            //       width: 8,
-            //       height: 8,
-            //       decoration: BoxDecoration(
-            //         color: character.alive ? Colors.green : Colors.red,
-            //         borderRadius: BorderRadius.circular(8),
-            //       ),
-            //     ),
-            //   ),
-            //   Padding(
-            //     padding: const EdgeInsets.all(2.0),
-            //     child: Text(
-            //       character.status,
-            //       style: const TextStyle(
-            //         fontSize: 12.0,
-            //       ),
-            //     ),
-            //   ),

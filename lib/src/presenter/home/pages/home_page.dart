@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gamebox/main.dart';
 import 'package:gamebox/src/infra/assets_paths.dart';
-import 'package:gamebox/src/usecases/games_list/entity/game_item.dart';
+import 'package:gamebox/src/domain/entities/game_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _controller = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-  final GameItemEntity _character = GameItemEntity(
+  final GameItemEntity _game = GameItemEntity(
     id: 452,
     title: 'Call Of Duty: Warzone',
     shortDescription:
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   return _GameCard(
-                    game: _character,
+                    game: _game,
                   );
                 }),
                 separatorBuilder: (context, index) => const SizedBox(
@@ -154,7 +154,7 @@ class _GameCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _GameThumbnail(character: game),
+            _GameThumbnail(game: game),
             _NameAndStatus(game: game),
             Padding(
               padding: const EdgeInsets.all(12.0),
@@ -224,10 +224,10 @@ class _NameAndStatus extends StatelessWidget {
 class _GameThumbnail extends StatelessWidget {
   const _GameThumbnail({
     Key? key,
-    required this.character,
+    required this.game,
   }) : super(key: key);
 
-  final GameItemEntity character;
+  final GameItemEntity game;
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +237,7 @@ class _GameThumbnail extends StatelessWidget {
         topRight: Radius.circular(12),
       ),
       child: CachedNetworkImage(
-        imageUrl: character.thumbnail,
+        imageUrl: game.thumbnail,
         placeholder: (context, url) => Image.asset(
           Assets.defaultImage,
         ),

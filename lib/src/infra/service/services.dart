@@ -1,26 +1,26 @@
 import 'dart:convert';
 
-import 'package:gamebox/src/domain/game_details/game_details_request.dart';
-import 'package:gamebox/src/domain/game_details/game_details_response.dart';
-import 'package:gamebox/src/domain/games_list/games_list_request.dart';
-import 'package:gamebox/src/domain/games_list/games_list_response.dart';
+import 'package:gamebox/src/infra/models/game_details_response.dart';
+import 'package:gamebox/src/infra/models/games_list_response.dart';
+import 'package:gamebox/src/infra/service/games_list/games_list_request.dart';
 
+import 'game_details/game_details_request.dart';
 import 'http_provider.dart';
 
 abstract class GameBoxServices {
-  Future<GamesListResponse>? getListOfGames(
+  Future<GamesListModel>? getListOfGames(
     int? page,
     String? category,
     String? platform,
   );
-  Future<GameDetailsResponse>? getGameDetails(
+  Future<GameDetailsModel>? getGameDetails(
     int id,
   );
 }
 
 class Services with GameBoxProvider implements GameBoxServices {
   @override
-  Future<GamesListResponse>? getListOfGames(
+  Future<GamesListModel>? getListOfGames(
     int? page,
     String? category,
     String? platform,
@@ -30,10 +30,10 @@ class Services with GameBoxProvider implements GameBoxServices {
       category: category,
       platform: platform,
     );
-    final data = await GameBoxProvider.execute<GamesListResponse>(
+    final data = await GameBoxProvider.execute<GamesListModel>(
       request: request,
     );
-    return GamesListResponse.fromJson(
+    return GamesListModel.fromJson(
       json.decode(
         data?.body ?? '',
       ),
@@ -41,14 +41,14 @@ class Services with GameBoxProvider implements GameBoxServices {
   }
 
   @override
-  Future<GameDetailsResponse>? getGameDetails(int id) async {
+  Future<GameDetailsModel>? getGameDetails(int id) async {
     final GameDetailsRequest request = GameDetailsRequest(
       id: id,
     );
-    final data = await GameBoxProvider.execute<GameDetailsResponse>(
+    final data = await GameBoxProvider.execute<GameDetailsModel>(
       request: request,
     );
-    return GameDetailsResponse.fromJson(
+    return GameDetailsModel.fromJson(
       json.decode(
         data?.body ?? '',
       ),

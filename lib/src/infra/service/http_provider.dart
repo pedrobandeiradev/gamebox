@@ -1,6 +1,6 @@
+import 'package:gamebox/src/infra/service/api_constants.dart';
+import 'package:gamebox/src/infra/service/base_request.dart';
 import 'package:http/http.dart';
-import 'package:gamebox/src/infra/api_constants.dart';
-import 'package:gamebox/src/infra/base_request.dart';
 
 mixin GameBoxProvider {
   static Future<Response?> execute<T>({

@@ -1,4 +1,4 @@
-class GameDetailsResponse {
+class GameDetailsModel {
   final int id;
   final String title;
   final String? thumbnail;
@@ -11,7 +11,7 @@ class GameDetailsResponse {
   final String releaseDate;
   final List<ScreenshotResponse>? screenshots;
 
-  GameDetailsResponse({
+  GameDetailsModel({
     required this.id,
     required this.title,
     required this.shortDescription,
@@ -25,7 +25,7 @@ class GameDetailsResponse {
     this.screenshots,
   });
 
-  GameDetailsResponse.fromJson(Map<String, dynamic> json)
+  GameDetailsModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         thumbnail = json['thumbnail'],

@@ -1,4 +1,4 @@
-import 'package:gamebox/src/infra/base_request.dart';
+import 'package:gamebox/src/infra/service/base_request.dart';
 
 class GameDetailsRequest extends BaseRequest {
   final int id;

@@ -1,4 +1,4 @@
-import 'package:gamebox/src/infra/base_request.dart';
+import 'package:gamebox/src/infra/service/base_request.dart';
 
 class GamesListRequest extends BaseRequest {
   final String? category;
