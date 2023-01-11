@@ -1,0 +1,28 @@
+{
+    "homeTitle": "Games",
+    "searchBarHint": "Search by title, description or publisher",
+    "sortingOptionTitle": "Title",
+    "sortingOptionReleaseDate": "Release Date",
+    "releasedOnDescription": "Released on {releaseDate}",
+    "@releasedOnDescription": {
+        "placeholders": {
+            "releaseDate": {
+                "description": "Release date"
+            }
+        }
+    },
+    "detailsInfoGenre": "Genre",
+    "detailsInfoReleaseDate": "Released on",
+    "detailsInfoPublisher": "Publisher",
+    "detailsInfoDeveloper": "Developed by",
+    "aboutGameDescription": "About {title}",
+    "@aboutGameDescription": {
+        "placeholders": {
+            "title": {
+                "description": "The name of the game"
+            }
+        }
+    },
+    "galleryTitle": "Gallery",
+    "language": "English"
+}

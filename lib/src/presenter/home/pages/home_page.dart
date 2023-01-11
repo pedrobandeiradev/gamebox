@@ -14,6 +14,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _controller = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+  late String dropdownCurrentTerm;
+  late final List<String> _sortingOptions;
+
+  //MARK - Remove
+  late List<GameItemEntity> games = [
+    _game,
+    _game,
+    _game,
+  ];
+
   final GameItemEntity _game = GameItemEntity(
     id: 452,
     title: 'Call Of Duty: Warzone',
@@ -23,7 +33,16 @@ class _HomePageState extends State<HomePage> {
     publisher: 'Activision Blizzard',
     releaseDate: '25/10/1991',
   );
-  final List<String> _sortingOptions = ['Title', 'Release Date'];
+
+  @override
+  void initState() {
+    super.initState();
+    _sortingOptions = [
+      AppLocalizations.of(context)!.sortingOptionTitle,
+      AppLocalizations.of(context)!.sortingOptionReleaseDate,
+    ];
+    dropdownCurrentTerm = _sortingOptions.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,37 +52,58 @@ class _HomePageState extends State<HomePage> {
           vertical: 24.0,
           horizontal: 24.0,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                shrinkWrap: true,
-                controller: _controller,
-                itemCount: 20,
-                itemBuilder: ((context, index) {
-                  if (index == 0) {
-                    return Column(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            controller: _controller,
+            child: Column(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
                       children: [
-                        const _GamesListHeader(),
-                        _SearchBarHeader(controller: _searchController),
-                        _SortingOptions(
-                          games: [_game],
-                          sortingOptions: _sortingOptions,
-                          currentValue: _sortingOptions.first,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Text(
+                            AppLocalizations.of(context)!.homeTitle,
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
-                    );
-                  }
-                  return _GameCard(
-                    game: _game,
-                  );
-                }),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 12,
+                    ),
+                    _SearchBarHeader(
+                      controller: _searchController,
+                    ),
+                    _SortingOptions(
+                      games: [_game],
+                      sortingOptions: _sortingOptions,
+                      currentValue: dropdownCurrentTerm,
+                      callback: (term, sortingList) {
+                        setState(() {
+                          dropdownCurrentTerm = term;
+                          games = sortingList;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-              ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: games.length,
+                  itemBuilder: ((context, index) => _GameCard(
+                        game: _game,
+                      )),
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 12,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -104,8 +144,8 @@ class _SearchBarHeader extends StatelessWidget {
                   left: 10,
                 ),
                 child: Text(
-                  'Search by title, description or publisher',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.searchBarHint,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -115,28 +155,6 @@ class _SearchBarHeader extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _GamesListHeader extends StatelessWidget {
-  final String title = "Games";
-  const _GamesListHeader({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
     );
   }
 }
@@ -160,8 +178,12 @@ class _GameCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _GameThumbnail(game: game),
-            _NameAndStatus(game: game),
+            _GameThumbnail(
+              game: game,
+            ),
+            _GameSummaryInfo(
+              game: game,
+            ),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(
@@ -179,13 +201,13 @@ class _GameCard extends StatelessWidget {
   }
 }
 
-class _NameAndStatus extends StatelessWidget {
-  const _NameAndStatus({
+class _GameSummaryInfo extends StatelessWidget {
+  final GameItemEntity game;
+
+  const _GameSummaryInfo({
     Key? key,
     required this.game,
   }) : super(key: key);
-
-  final GameItemEntity game;
 
   @override
   Widget build(BuildContext context) {
@@ -254,27 +276,39 @@ class _GameThumbnail extends StatelessWidget {
 
 class _SortingOptions extends StatelessWidget {
   final List<String> sortingOptions;
-  String? currentValue;
+  final Function(String, List<GameItemEntity>) callback;
+  final String currentValue;
   final List<GameItemEntity> games;
 
-  _SortingOptions(
-      {required this.games, required this.sortingOptions, this.currentValue});
+  const _SortingOptions({
+    required this.games,
+    required this.sortingOptions,
+    required this.currentValue,
+    required this.callback,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Spacer(),
+        const Spacer(),
         DropdownButton<String>(
           value: currentValue,
           icon: const Icon(Icons.sort),
-          onChanged: (String? value) {
-            currentValue = value!;
+          onChanged: (value) {
+            sortByTitle();
+            sortByReleaseDate();
+            callback(value ?? '', games);
           },
           items: sortingOptions.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 2.0,
+                ),
+                child: Text(value),
+              ),
             );
           }).toList(),
         ),
