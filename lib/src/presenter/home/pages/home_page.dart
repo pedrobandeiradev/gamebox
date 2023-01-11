@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     publisher: 'Activision Blizzard',
     releaseDate: '25/10/1991',
   );
+  final List<String> _sortingOptions = ['Title', 'Release Date'];
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         const _GamesListHeader(),
                         _SearchBarHeader(controller: _searchController),
+                        _SortingOptions(
+                          games: [_game],
+                          sortingOptions: _sortingOptions,
+                          currentValue: _sortingOptions.first,
+                        ),
                       ],
                     );
                   }
@@ -243,5 +249,45 @@ class _GameThumbnail extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _SortingOptions extends StatelessWidget {
+  final List<String> sortingOptions;
+  String? currentValue;
+  final List<GameItemEntity> games;
+
+  _SortingOptions(
+      {required this.games, required this.sortingOptions, this.currentValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Spacer(),
+        DropdownButton<String>(
+          value: currentValue,
+          icon: const Icon(Icons.sort),
+          onChanged: (String? value) {
+            currentValue = value!;
+          },
+          items: sortingOptions.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  void sortByTitle() {
+    games.sort(
+        (current, next) => current.releaseDate.compareTo(next.releaseDate));
+  }
+
+  void sortByReleaseDate() {
+    games.sort((current, next) => current.title.compareTo(next.title));
   }
 }
